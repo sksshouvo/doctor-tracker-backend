@@ -1,0 +1,82 @@
+### Sample requests (VS Code REST Client / JetBrains HTTP client)
+@base = http://localhost:5001/api/v1
+
+### Health
+GET {{base}}/health
+
+### Login (copy accessToken into @token below)
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@doctortracker.dev", "password": "Admin@12345" }
+
+@token = PASTE_ACCESS_TOKEN
+
+### Refresh (cookie jar required)
+POST {{base}}/auth/refresh
+
+### Me
+GET {{base}}/auth/me
+Authorization: Bearer {{token}}
+
+### Doctors: search + filter + sort + paginate
+GET {{base}}/doctors?q=car&specialization=Cardiology,Neurology&sort=-patientCount&page=1&limit=20
+Authorization: Bearer {{token}}
+
+### Doctors: options and facets
+GET {{base}}/doctors/options?q=an&limit=10
+Authorization: Bearer {{token}}
+
+###
+GET {{base}}/doctors/facets
+Authorization: Bearer {{token}}
+
+### Create doctor
+POST {{base}}/doctors
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Dr. Ayesha Rahman", "specialization": "Cardiology", "hospital": "Square Hospital", "phone": "+8801711000000", "email": "ayesha@example.com" }
+
+### Doctor detail (replace id)
+GET {{base}}/doctors/66f0c0000000000000000000
+Authorization: Bearer {{token}}
+
+### Patients of a doctor
+GET {{base}}/doctors/66f0c0000000000000000000/patients?condition=critical
+Authorization: Bearer {{token}}
+
+### Add patient to a doctor
+POST {{base}}/doctors/66f0c0000000000000000000/patients
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Rina Akter", "age": 31, "gender": "female", "phone": "+8801811223344", "diagnosis": "Migraine", "condition": "under_observation", "visitDate": "2026-11-18" }
+
+### Patients: combined filters
+GET {{base}}/patients?q=kar&condition=critical,recovering&from=2026-10-01&to=2026-10-31&sort=-visitDate&page=2&limit=20
+Authorization: Bearer {{token}}
+
+### Dashboard
+GET {{base}}/dashboard/summary?range=30d
+Authorization: Bearer {{token}}
+
+###
+GET {{base}}/dashboard/patients-over-time?range=12m
+Authorization: Bearer {{token}}
+
+###
+GET {{base}}/dashboard/patients-per-doctor?limit=10
+Authorization: Bearer {{token}}
+
+###
+GET {{base}}/dashboard/condition-distribution
+Authorization: Bearer {{token}}
+
+###
+GET {{base}}/dashboard/specialization-distribution?limit=8
+Authorization: Bearer {{token}}
+
+###
+GET {{base}}/dashboard/recent-patients?limit=5
+Authorization: Bearer {{token}}
